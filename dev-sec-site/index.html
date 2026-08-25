@@ -1,12 +1,119 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Dev & Sec Site</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apresentação da Empresa</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <nav></nav>
-    <script src="script.js"></script>
+
+  <!-- Barra de Navegação -->
+  <nav id="navbar">
+    <ul>
+      <li><a href="#inicio" class="nav-link active">Início</a></li>
+      <li><a href="#sobre" class="nav-link">Sobre a Empresa</a></li>
+      <li><a href="#projetos" class="nav-link">Nossos Projetos</a></li>
+      <li><a href="#contato" class="nav-link">Contato</a></li>
+    </ul>
+    
+    <!-- Ícones Sociais no canto -->
+    <div class="icones-sociais">
+      <a href="https://github.com/SEU_USUARIO" target="_blank"><i class="fa-brands fa-github"></i></a>
+      <a href="https://instagram.com/SEU_USUARIO" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+    </div>
+  </nav>
+
+ <!-- 1. Sessão Início -->
+  <section id="inicio" class="sessao">
+    <h1>Bem-vindo à Nossa Empresa</h1>
+    <p>Criando soluções inovadoras para o seu negócio.</p>
+  </section>
+
+  <!-- 2. Sessão Sobre -->
+  <section id="sobre" class="sessao">
+    <h2>Sobre a Empresa</h2>
+    
+    <div class="container-quadrados">
+      <img src="https://via.placeholder.com/300" alt="Foto 1" class="quadrado-img">
+      <img src="https://via.placeholder.com/300" alt="Foto 2" class="quadrado-img">
+      <img src="https://via.placeholder.com/300" alt="Foto 3" class="quadrado-img">
+    </div>
+  </section>
+
+  <!-- 3. Sessão Projetos com Carrossel -->
+  <section id="projetos" class="sessao">
+    <h2>Nossos Projetos</h2>
+    
+    <div class="cards-container">
+      <!-- Você pode adicionar quantos cards quiser aqui -->
+      <div class="card">Projeto 1</div>
+      <div class="card">Projeto 2</div>
+      <div class="card">Projeto 3</div>
+      <div class="card">Projeto 4</div>
+      <div class="card">Projeto 5</div>
+    </div>
+  </section>
+
+
+  <!-- 4. Sessão Contato -->
+  <section id="contato" class="sessao">
+    <h2>Entre em Contato</h2>
+    <p style="margin: 15px 0; font-size: 18px;">Se quer saber mais, clique no botão abaixo.</p>
+    <button id="btn-abrir-form" class="btn-destaque">Saber Mais</button>
+  </section>
+
+  <!-- Janela Popup do Formulário (Escondida por padrão) -->
+  <div id="modal-contato" class="modal">
+    <div class="modal-conteudo">
+      <span class="fechar-modal">&times;</span>
+      <h2 style="color: #333; margin-bottom: 20px;">Deixe seus dados</h2>
+      
+      <form id="form-whatsapp">
+        
+       <!-- Campo Nome -->
+        <div class="campo-form">
+          <label for="nome-user">Seu Nome</label>
+          <input type="text" id="nome-user" placeholder="Como podemos te chamar?" 
+                 maxlength="20"
+                 oninput="this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '')" 
+                 onblur="this.value = this.value.trim()"
+                 required>
+        </div>
+
+        <!-- Campo E-mail -->
+        <div class="campo-form">
+          <label for="email-user">Seu E-mail</label>
+          <input type="email" id="email-user" placeholder="Seu melhor e-mail" 
+                 maxlength="50"
+                 oninput="this.value = this.value.replace(/[^a-zA-Z0-9@._-]/g, '').toLowerCase()" 
+                 onblur="this.value = this.value.trim()"
+                 required>
+        </div>
+
+        <!-- Campo Telefone (DDD + Número) -->
+        <div class="campo-form">
+          <label>Seu Telefone (WhatsApp)</label>
+          <div class="telefone-container">
+            
+            <input type="tel" id="ddd-user" placeholder="DDD" maxlength="2" 
+                   pattern="[0-9]*" 
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                   required>
+                   
+            <input type="tel" id="telefone-user" placeholder="Número" maxlength="9" 
+                   pattern="[0-9]*" 
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                   required>
+                   
+          </div>
+        </div>
+        <button type="submit">Ir para o WhatsApp</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
