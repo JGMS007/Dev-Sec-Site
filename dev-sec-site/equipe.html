@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%9A%80</text></svg>">
+  <title>Nossa Equipe | Synergy Solutions</title>
+  <meta name="description" content="Conheça os fundadores da Synergy Solutions.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="equipe.css">
+</head>
+<body>
+
+  <nav id="navbar">
+    <div class="navbar-linha">
+      <a href="index.html#inicio" class="marca">Synergy Solutions</a>
+    </div>
+  </nav>
+
+  <main class="sessao-equipe">
+    <h1>Nossa Equipe</h1>
+    <p class="subtitulo-equipe">Os fundadores por trás da Synergy Solutions.</p>
+
+    <div class="grade-equipe">
+
+      <!-- PERFIL 1 -->
+      <article class="cartao-perfil">
+        <div class="placeholder-foto placeholder-foto--perfil" role="img" aria-label="Foto de Samuel Rocha em breve">
+          <i class="fa-solid fa-user" aria-hidden="true"></i>
+        </div>
+        <h2>Samuel Rocha</h2>
+        <p class="cargo-perfil">Desenvolvedor Full Stack</p>
+        <p class="bio-perfil">Especialista em desenvolvimento web, análise de negócios, soluções empresariais e automações.</p>
+        <a class="link-github" href="https://github.com/samugeroc" target="_blank" rel="noopener noreferrer">
+          <i class="fa-brands fa-github" aria-hidden="true"></i> Ver GitHub
+        </a>
+      </article>
+
+      <!-- PERFIL 2 -->
+      <article class="cartao-perfil">
+        <div class="placeholder-foto placeholder-foto--perfil" role="img" aria-label="Foto de João Gabriel Melo Silva em breve">
+          <i class="fa-solid fa-user" aria-hidden="true"></i>
+        </div>
+        <h2>João Gabriel Melo Silva</h2>
+        <p class="cargo-perfil">Engenheiro Dev Sec Ops</p>
+        <p class="bio-perfil">Especialista em segurança de aplicações, monitoramento de ameaças, análise de alertas, operações de Blue Team e identificação de vulnerabilidades.</p>
+        <a class="link-github" href="https://github.com/JGMS007" target="_blank" rel="noopener noreferrer">
+          <i class="fa-brands fa-github" aria-hidden="true"></i> Ver GitHub
+        </a>
+      </article>
+
+    </div>
+
+    <a href="index.html#inicio" class="link-voltar">&larr; Voltar para a página inicial</a>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="ano-atual"></span> Synergy Solutions. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    document.getElementById('ano-atual').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

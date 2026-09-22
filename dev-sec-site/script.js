@@ -1,3 +1,8 @@
+// Verifica se o usuário pediu, nas configurações do sistema, para reduzir animações.
+// Vamos consultar essa variável em mais de um lugar do código abaixo.
+const prefereMenosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+
 // LÓGICA DO MENU ATIVO NO SCROLL
 const secoes = document.querySelectorAll('.sessao');
 const linksMenu = document.querySelectorAll('.nav-link');
@@ -7,7 +12,6 @@ window.addEventListener('scroll', () => {
 
   secoes.forEach(secao => {
     const topoDaSecao = secao.offsetTop;
-    // Quando a sessão chega a 1/3 do topo da tela, consideramos ela ativa
     if (pageYOffset >= topoDaSecao - (window.innerHeight / 3)) {
       sessaoAtual = secao.getAttribute('id');
     }
@@ -15,10 +19,28 @@ window.addEventListener('scroll', () => {
 
   linksMenu.forEach(link => {
     link.classList.remove('active');
-    // Se o link tiver o nome da sessão atual no href, ele ganha a cor de destaque
     if (link.getAttribute('href').includes(sessaoAtual)) {
       link.classList.add('active');
     }
+  });
+});
+
+
+// --- LÓGICA DO MENU HAMBÚRGUER (CELULAR) ---
+const btnMenu = document.getElementById('btn-menu');
+const listaMenu = document.getElementById('lista-menu');
+
+btnMenu.addEventListener('click', () => {
+  const estaAberto = listaMenu.classList.toggle('aberto');
+  // aria-expanded avisa leitores de tela se o menu está aberto ou fechado
+  btnMenu.setAttribute('aria-expanded', estaAberto ? 'true' : 'false');
+});
+
+// Fecha o menu automaticamente ao clicar em um link (comum em sites de uma página só)
+linksMenu.forEach(link => {
+  link.addEventListener('click', () => {
+    listaMenu.classList.remove('aberto');
+    btnMenu.setAttribute('aria-expanded', 'false');
   });
 });
 
@@ -28,69 +50,63 @@ const slider = document.querySelector('.cards-container');
 let isDown = false;
 let startX;
 let scrollLeft;
-let autoScrollTimer; // Variável que vai guardar o nosso cronômetro
+let autoScrollTimer;
 
-// 1. Função que faz o carrossel rodar sozinho
 function iniciarAutoScroll() {
-  // Configura um intervalo para rodar a cada 3000 milissegundos (3 segundos)
+  // Se a pessoa pediu menos movimento, não rodamos o carrossel sozinho.
+  if (prefereMenosMovimento) return;
+
   autoScrollTimer = setInterval(() => {
-    // Calcula a largura do card + o espaço entre eles
     const cardWidth = slider.querySelector('.card').offsetWidth;
     const gap = parseInt(window.getComputedStyle(slider).gap) || 20;
     const scrollAmount = cardWidth + gap;
 
-    // Verifica se chegou no final do carrossel (usamos -10 de margem de segurança)
     if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 10) {
-      // Se chegou no fim, volta para o primeiro card suavemente
       slider.scrollTo({ left: 0, behavior: 'smooth' });
     } else {
-      // Se não, rola para o lado e mostra o próximo card
       slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
-  }, 3000); // Você pode alterar este número para deixar mais rápido ou mais devagar
+  }, 3000);
 }
 
-// 2. Função que pausa o carrossel
 function pararAutoScroll() {
   clearInterval(autoScrollTimer);
 }
 
-// Inicia o carrossel automático assim que a página carregar
 iniciarAutoScroll();
 
-// 3. Pausar e retomar com o Mouse ou Toque (Celular)
-slider.addEventListener('mouseenter', pararAutoScroll); // Pausa quando põe o mouse em cima
-slider.addEventListener('mouseleave', iniciarAutoScroll); // Retoma quando tira o mouse
+slider.addEventListener('mouseenter', pararAutoScroll);
+slider.addEventListener('mouseleave', iniciarAutoScroll);
 
-slider.addEventListener('touchstart', pararAutoScroll); // Pausa quando toca na tela do celular
-slider.addEventListener('touchend', iniciarAutoScroll); // Retoma quando tira o dedo da tela
+slider.addEventListener('touchstart', pararAutoScroll);
+slider.addEventListener('touchend', iniciarAutoScroll);
 
-// 4. Lógica de Arrastar com o Mouse no Computador (Mantida)
 slider.addEventListener('mousedown', (e) => {
   isDown = true;
   startX = e.pageX - slider.offsetLeft;
   scrollLeft = slider.scrollLeft;
-  slider.style.scrollSnapType = 'none'; // Desliga o "imã" para arrastar livremente
-  pararAutoScroll(); // Pausa o automático por precaução
+  slider.style.scrollSnapType = 'none';
+  pararAutoScroll();
 });
 
 slider.addEventListener('mouseleave', () => {
   isDown = false;
-  slider.style.scrollSnapType = 'x mandatory'; // Religa o "imã" se o mouse sair
+  slider.style.scrollSnapType = 'x mandatory';
 });
 
 slider.addEventListener('mouseup', () => {
   isDown = false;
-  slider.style.scrollSnapType = 'x mandatory'; // Religa o "imã" ao soltar o clique
+  slider.style.scrollSnapType = 'x mandatory';
 });
 
 slider.addEventListener('mousemove', (e) => {
   if (!isDown) return;
   e.preventDefault();
   const x = e.pageX - slider.offsetLeft;
-  const walk = (x - startX) * 2; // O número 2 é a velocidade do arraste manual
+  const walk = (x - startX) * 2;
   slider.scrollLeft = scrollLeft - walk;
 });
+
 
 // --- LÓGICA DO MODAL (POPUP) E WHATSAPP ---
 const btnAbrirModal = document.getElementById('btn-abrir-form');
@@ -98,63 +114,111 @@ const modal = document.getElementById('modal-contato');
 const btnFecharModal = document.querySelector('.fechar-modal');
 const formWhats = document.getElementById('form-whatsapp');
 
-// 1. Faz o Popup aparecer ao clicar no botão "Saber Mais"
-btnAbrirModal.addEventListener('click', () => {
+// Guarda qual elemento estava focado antes de abrir o modal, para devolver
+// o foco a ele quando o modal fechar (importante para quem navega por teclado).
+let elementoComFocoAnterior = null;
+
+// Todos os elementos "focáveis" dentro do modal, usados para prender o Tab lá dentro.
+function pegarElementosFocaveisDoModal() {
+  return modal.querySelectorAll(
+    'input, button, [href], select, textarea, [tabindex]:not([tabindex="-1"])'
+  );
+}
+
+function abrirModal() {
+  elementoComFocoAnterior = document.activeElement;
+
+  modal.hidden = false;
   modal.style.display = 'flex';
-});
 
-// 2. Fecha o Popup ao clicar no "X"
-btnFecharModal.addEventListener('click', () => {
+  // Leva o foco para o primeiro campo do formulário
+  const primeiroFocavel = pegarElementosFocaveisDoModal()[0];
+  if (primeiroFocavel) primeiroFocavel.focus();
+
+  document.addEventListener('keydown', gerenciarTecladoModal);
+}
+
+function fecharModal() {
   modal.style.display = 'none';
-});
+  modal.hidden = true;
 
-// 3. Fecha o Popup se clicar fora da caixinha branca (no fundo escuro)
+  document.removeEventListener('keydown', gerenciarTecladoModal);
+
+  // Devolve o foco para o botão que abriu o modal
+  if (elementoComFocoAnterior) elementoComFocoAnterior.focus();
+}
+
+// Fecha com a tecla Esc e prende o Tab dentro do modal (focus trap)
+function gerenciarTecladoModal(e) {
+  if (e.key === 'Escape') {
+    fecharModal();
+    return;
+  }
+
+  if (e.key === 'Tab') {
+    const focaveis = pegarElementosFocaveisDoModal();
+    const primeiro = focaveis[0];
+    const ultimo = focaveis[focaveis.length - 1];
+
+    if (e.shiftKey && document.activeElement === primeiro) {
+      e.preventDefault();
+      ultimo.focus();
+    } else if (!e.shiftKey && document.activeElement === ultimo) {
+      e.preventDefault();
+      primeiro.focus();
+    }
+  }
+}
+
+btnAbrirModal.addEventListener('click', abrirModal);
+btnFecharModal.addEventListener('click', fecharModal);
+
+// Fecha o Popup se clicar fora da caixinha branca (no fundo escuro)
 window.addEventListener('click', (e) => {
   if (e.target === modal) {
-    modal.style.display = 'none';
+    fecharModal();
   }
 });
 
-// 4. Lógica de Enviar os Dados e abrir o WhatsApp
+// Lógica de Enviar os Dados e abrir o WhatsApp
 formWhats.addEventListener('submit', (e) => {
-  e.preventDefault(); 
+  e.preventDefault();
 
-  // Pega os dados e garante que o trim() limpe espaços ocultos
   const nome = document.getElementById('nome-user').value.trim();
   const email = document.getElementById('email-user').value.trim();
   const ddd = document.getElementById('ddd-user').value;
   const telefone = document.getElementById('telefone-user').value;
-  
-  // 1ª Trava: Validação do Nome
+
   if (nome === "") {
     alert("Por favor, digite um nome válido.");
-    return; // Para a execução
+    return;
   }
 
-  // 2ª Trava: Validação do E-mail (Exige o formato correto como .com ou .com.br)
-  // Essa fórmula checa se tem texto, seguido de @, seguido de texto, seguido de ponto (.) e de 2 a 6 letras no final
   const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   if (!regexEmail.test(email)) {
     alert("Por favor, digite um e-mail completo e válido (exemplo: seu-nome@email.com).");
-    return; // Para a execução
+    return;
   }
 
-  // ATENÇÃO: SEU NÚMERO AQUI (DDI + DDD + Número)
-  const numeroWhatsApp = "5511999999999"; 
-  
-  // Monta a mensagem
+  const numeroWhatsApp = "5511957688888"; // WhatsApp do Samuel
+
   const mensagem = `Olá! Meu nome é ${nome}. 
 Acabei de me cadastrar no site e gostaria de saber mais sobre os projetos!
   
 Meus dados:
 E-mail: ${email}
 Telefone: (${ddd}) ${telefone}`;
-  
-  // Cria o link oficial e abre o WhatsApp
+
   const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensagem)}`;
   window.open(url, '_blank');
-  
-  // Limpa o formulário e fecha o Popup
+
   formWhats.reset();
-  modal.style.display = 'none';
+  fecharModal();
 });
+
+
+// --- RODAPÉ: ano atual automático ---
+const spanAno = document.getElementById('ano-atual');
+if (spanAno) {
+  spanAno.textContent = new Date().getFullYear();
+}

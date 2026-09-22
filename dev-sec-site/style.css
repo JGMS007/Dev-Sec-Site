@@ -1,6 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 
+/* ==========================================================================
+   VARIÁVEIS DE COR (design tokens)
+   Centralizamos aqui todas as cores usadas no site. Se um cliente pedir para
+   trocar a cor de destaque, por exemplo, muda-se um valor aqui e o site
+   inteiro se atualiza — não é preciso caçar a cor espalhada pelo arquivo.
+   ========================================================================== */
+:root {
+  --cor-destaque: #f39c12;       /* laranja usado em hovers, bordas e botão principal */
+  --cor-destaque-hover: #e67e22; /* variação mais escura para efeitos de hover */
+
+  --cor-fundo-escuro: #0d0d0d;   /* fundo das sessões "Início" e "Projetos" */
+  --cor-fundo-claro: #f8f8f8;    /* fundo da sessão "Sobre" */
+  --cor-fundo-contato: #bdc3c7;  /* fundo da sessão "Contato" */
+
+  --cor-texto-claro: #ffffff;    /* texto sobre fundos escuros */
+  --cor-texto-escuro: #333333;   /* texto sobre fundos claros */
+  --cor-texto-secundario: #555555;
+
+  --cor-whatsapp: #25D366;
+  --cor-whatsapp-hover: #1ebe57;
+
+  --cor-borda-neutra: #cccccc;
+  --cor-placeholder-fundo: #e9e9e9;
+
+  --sombra-padrao: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
 
 /* Reseta margens e define rolagem suave */
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -9,94 +35,173 @@ html { scroll-behavior: smooth; font-family: Arial, sans-serif; }
 body {
   font-family: "Roboto", sans-serif;
 }
-/* --- AJUSTES DA NAVBAR E ÍCONES SOCIAIS --- */
+
+/* Deixa visível o contorno de foco do teclado em qualquer elemento focável.
+   Isso é essencial para quem navega sem mouse (só teclado) — sem isso, a
+   pessoa perde a noção de "onde" está na página. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--cor-destaque);
+  outline-offset: 2px;
+}
+
+/* Respeita quem pede menos movimento no sistema operacional (Windows/Mac/celular).
+   Isso desliga a rolagem suave automática para quem tem sensibilidade a animações. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- NAVBAR --- */
 #navbar {
   position: fixed;
   top: 0;
   width: 100%;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.4); /* Recuperei o fundo escuro da barra */
+  background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(5px);
   z-index: 1000;
-  display: flex;
-  justify-content: center; 
-  align-items: center;
 }
 
-/* Recuperei a formatação dos links que tinha sumido */
-#navbar ul {
-  list-style: none; 
-  display: flex; 
-  gap: 40px; 
+.navbar-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-/* Links da Barra de Navegação */
+
+.marca {
+  color: var(--cor-texto-claro);
+  font-weight: bold;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+/* Botão hambúrguer: escondido por padrão (telas grandes) */
+.btn-menu {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.linha-hamburguer {
+  width: 26px;
+  height: 3px;
+  background-color: var(--cor-texto-claro);
+  border-radius: 2px;
+}
+
+#lista-menu {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin-top: 15px;
+}
+
 #navbar a {
   text-decoration: none;
-  color: #fff;
+  color: var(--cor-texto-claro);
   font-weight: bold;
   font-size: 18px;
-  
-  /* Adicionamos o inline-block para permitir que o link aumente de tamanho */
-  display: inline-block; 
+  display: inline-block;
   transition: transform 0.3s ease, color 0.3s ease;
 }
 
-/* Novo efeito na Navbar (Muda de cor, aumenta e sobe um pouquinho) */
 #navbar a:hover, #navbar a.active {
-  color: #f39c12; 
-  transform: scale(1.15) translateY(-3px); 
+  color: var(--cor-destaque);
+  transform: scale(1.15) translateY(-3px);
+}
+
+.item-icones-sociais {
+  display: flex;
 }
 
 .icones-sociais {
-  position: absolute;
-  right: 30px; 
   display: flex;
   gap: 15px;
 }
 
 .icones-sociais a {
-  color: #fff;
-  font-size: 24px; 
+  color: var(--cor-texto-claro);
+  font-size: 22px;
   transition: color 0.3s, transform 0.3s;
 }
 
 .icones-sociais a:hover {
-  color: #f39c12; 
-  transform: scale(1.2); 
+  color: var(--cor-destaque);
+  transform: scale(1.2);
 }
 
+/* --- NAVBAR RESPONSIVA (celular) --- */
 @media (max-width: 768px) {
-  .icones-sociais {
-    display: none;
+  .btn-menu {
+    display: flex;
+  }
+
+  /* Em vez de esconder os ícones sociais (como era antes), o menu inteiro
+     vira uma lista vertical recolhível, e os ícones vão junto dela. */
+  #lista-menu {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 0;
+    transition: max-height 0.3s ease, margin-top 0.3s ease;
+  }
+
+  #lista-menu.aberto {
+    max-height: 400px;
+    margin-top: 20px;
+  }
+
+  .item-icones-sociais {
+    margin-top: 10px;
   }
 }
 
-/* --- AUMENTANDO OS TÍTULOS PADRÕES --- */
+/* --- TÍTULOS --- */
 .sessao h1 {
-  font-size: 3.5rem; 
+  font-size: 3.5rem;
   margin-bottom: 20px;
 }
 
 .sessao h2 {
-  font-size: 3rem; 
+  font-size: 3rem;
   margin-bottom: 30px;
 }
 
-/* --- EFEITO DE HOVER PALAVRA POR PALAVRA --- */
+@media (max-width: 480px) {
+  .sessao h1 { font-size: 2.4rem; }
+  .sessao h2 { font-size: 2rem; }
+}
+
 .titulo-animado span {
-  display: inline-block; 
+  display: inline-block;
   transition: transform 0.3s ease, color 0.3s ease;
-  cursor: default; 
+  cursor: default;
 }
 
 .titulo-animado span:hover {
-  color: #f39c12; 
-  transform: scale(1.15) translateY(-5px); 
+  color: var(--cor-destaque);
+  transform: scale(1.15) translateY(-5px);
 }
 
 /* Configuração Padrão das Sessões */
 .sessao {
-  min-height: 100vh; 
+  min-height: 100vh;
   padding: 100px 20px 20px;
   display: flex;
   flex-direction: column;
@@ -105,59 +210,65 @@ body {
   text-align: center;
 }
 
-/* Cores de fundo diferentes para distinguir as sessões */
-#inicio { background-color: #0d0d0d; color: white; }
-#sobre { background-color: #f8f8f8; color: #333; }
-#projetos { background-color: #0d0d0d; color: white; }
-#contato { background-color: #bdc3c7; color: #333; }
+#inicio { background-color: var(--cor-fundo-escuro); color: var(--cor-texto-claro); }
+#sobre { background-color: var(--cor-fundo-claro); color: var(--cor-texto-escuro); }
+#projetos { background-color: var(--cor-fundo-escuro); color: var(--cor-texto-claro); }
+#contato { background-color: var(--cor-fundo-contato); color: var(--cor-texto-escuro); }
 
-/* Container dos Quadrados */
+/* Container das fotos */
 .container-quadrados {
   display: flex;
-  gap: 15px; /* Espaço entre os quadrados */
+  flex-wrap: wrap;
+  gap: 15px;
   margin-top: 30px;
-  width: 100%; /* Ocupa a largura total disponível */
-  max-width: 800px; /* Limite máximo para não ficarem gigantes em monitores grandes */
-  justify-content: space-between; 
+  width: 100%;
+  max-width: 800px;
+  justify-content: center;
 }
 
-/* O Quadrado em si */
-.quadrado-img {
-  flex: 1; /* Divide o espaço da tela em 3 partes perfeitamente iguais */
-  aspect-ratio: 1 / 1; /* Força o elemento a ser sempre um quadrado perfeito */
-  
-  background-color: #ccc;
+/* Placeholder neutro (substitui as imagens até termos as fotos reais) */
+.placeholder-foto {
+  flex: 1 1 200px;
+  max-width: 260px;
+  aspect-ratio: 1 / 1;
+  background-color: var(--cor-placeholder-fundo);
+  border: 2px dashed var(--cor-borda-neutra);
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  object-fit: cover; /* Garante que a foto não fique esmagada ou esticada */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #888;
   transition: transform 0.3s ease;
 }
 
-/* Efeito ao passar o mouse */
-.quadrado-img:hover {
-  transform: scale(1.05);
+.placeholder-foto i {
+  font-size: 2rem;
 }
 
-/* Estilização dos Cards Arrastáveis */
+.placeholder-foto span {
+  font-size: 0.9rem;
+}
+
+.placeholder-foto:hover {
+  transform: scale(1.03);
+}
+
+/* Cards Arrastáveis */
 .cards-container {
   display: flex;
-  gap: 20px; 
+  gap: 20px;
   margin-top: 40px;
-  
   width: 100%;
-  /* Mudança 1: Removemos o max-width: 900px para ele poder esticar no computador */
-  max-width: 100%; 
-  
-  /* Adicionamos uma margem lateral em porcentagem para o primeiro card não ficar colado na tela */
-  padding: 20px 5%; 
-  
+  max-width: 100%;
+  padding: 20px 5%;
   overflow-x: auto;
   scroll-behavior: smooth;
-  scroll-snap-type: x mandatory; 
-  cursor: grab; 
+  scroll-snap-type: x mandatory;
+  cursor: grab;
 }
 
-/* Oculta a barra de rolagem */
 .cards-container::-webkit-scrollbar {
   display: none;
 }
@@ -167,42 +278,35 @@ body {
 }
 
 .card {
-  /* Mudança 2: Trocamos os 280px por 85%. 
-     Isso faz o card ocupar 85% da tela, sobrando espaço para mostrar a beirada do próximo! */
-  min-width: 85%; 
-  
-  /* Aumentei um pouco a altura para ficar mais proporcional em telas de computador */
-  height: 450px; 
-  
+  min-width: 85%;
+  height: 450px;
   background: #7fabd2;
   border-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  color: white;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  
-  flex-shrink: 0; 
-  scroll-snap-align: center; /* Garante que ao soltar, ele pare bem no meio */
+  color: var(--cor-texto-claro);
+  box-shadow: var(--sombra-padrao);
+  flex-shrink: 0;
+  scroll-snap-align: center;
   transition: transform 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-10px); 
+  transform: translateY(-10px);
 }
 
-/* Mudando o cursor quando estiver arrastando */
 .cards-container:active {
   cursor: grabbing;
 }
 
-/* Estilos do Botão da Sessão de Contato */
+/* Botão da Sessão de Contato */
 .btn-destaque {
   padding: 15px 30px;
-  background-color: #151515; /* Laranja da sua paleta, pode mudar */
-  color: white;
-  border: 2px solid #f39c12;
+  background-color: #151515;
+  color: var(--cor-texto-claro);
+  border: 2px solid var(--cor-destaque);
   border-radius: 3px;
   font-size: 18px;
   cursor: pointer;
@@ -210,25 +314,30 @@ body {
   transition: transform 0.3s, background 0.3s;
 }
 .btn-destaque:hover {
-  background-color: #e67e22;
-  transform: scale(1.05); /* Dá uma leve crescida no botão */
+  background-color: var(--cor-destaque-hover);
+  transform: scale(1.05);
 }
 
 /* Fundo Escuro do Popup (Modal) */
 .modal {
-  display: none; /* Começa invisível */
+  display: none;
   position: fixed;
-  z-index: 2000; /* Fica por cima de tudo, até da barra do topo */
+  z-index: 2000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* Preto transparente */
+  background-color: rgba(0, 0, 0, 0.7);
   align-items: center;
   justify-content: center;
 }
 
-/* Caixa Branca do Popup */
+/* O atributo [hidden] some o elemento por padrão; o JS troca para display:flex
+   quando o modal precisa aparecer. Mantemos as duas técnicas por segurança. */
+.modal[hidden] {
+  display: none;
+}
+
 .modal-conteudo {
   background-color: #fff;
   padding: 30px;
@@ -240,7 +349,6 @@ body {
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-/* Botão de Fechar o Popup (O "X") */
 .fechar-modal {
   position: absolute;
   top: 10px;
@@ -249,19 +357,20 @@ body {
   font-weight: bold;
   color: #aaa;
   cursor: pointer;
+  background: none;
+  border: none;
+  line-height: 1;
+  padding: 4px 8px;
 }
 .fechar-modal:hover { color: #333; }
 
-/* Estilização do Formulário dentro do Popup */
-/* Estilização do Formulário dentro do Popup */
 #form-whatsapp {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  text-align: left; /* Alinha os textos (labels) à esquerda */
+  text-align: left;
 }
 
-/* Agrupa o título (label) e o input */
 .campo-form {
   display: flex;
   flex-direction: column;
@@ -270,36 +379,35 @@ body {
 
 .campo-form label {
   font-size: 14px;
-  color: #555;
+  color: var(--cor-texto-secundario);
   font-weight: bold;
 }
 
 #form-whatsapp input {
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--cor-borda-neutra);
   border-radius: 5px;
   font-size: 16px;
 }
 
-/* Container do Telefone para ficarem lado a lado */
 .telefone-container {
   display: flex;
   gap: 10px;
 }
 
 #ddd-user {
-  width: 80px; /* Deixa a caixinha do DDD menor */
-  text-align: center; /* Centraliza o número do DDD */
+  width: 80px;
+  text-align: center;
 }
 
 #telefone-user {
-  flex: 1; /* Faz o campo do número ocupar o resto do espaço */
+  flex: 1;
 }
 
 #form-whatsapp button {
   padding: 15px;
-  background-color: #25D366; 
-  color: white;
+  background-color: var(--cor-whatsapp);
+  color: var(--cor-texto-claro);
   border: none;
   border-radius: 5px;
   font-size: 16px;
@@ -309,5 +417,14 @@ body {
 }
 
 #form-whatsapp button:hover {
-  background-color: #1ebe57;
+  background-color: var(--cor-whatsapp-hover);
+}
+
+/* --- RODAPÉ --- */
+footer {
+  background-color: var(--cor-fundo-escuro);
+  color: var(--cor-texto-claro);
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
 }
