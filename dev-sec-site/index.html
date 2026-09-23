@@ -25,11 +25,10 @@
   <!-- Barra de Navegação -->
   <nav id="navbar">
     <div class="navbar-linha">
-      <!-- Duas versões da logo: a JS troca qual delas fica visível (classe
-           "fundo-claro" na navbar), de acordo com a sessão que está atrás dela. -->
+      <!-- Fundo do site é sempre preto agora, então usamos só a versão
+           de letras claras da logo (a de letras escuras ficaria invisível). -->
       <a href="#inicio" class="marca-link" aria-label="Synergy Solutions - página inicial">
-        <img src="images/SynergySoluctionswhitelogo.png" alt="Synergy Solutions" class="logo-navbar logo-clara">
-        <img src="images/SynergySoluctionsblacklogo.png" alt="Synergy Solutions" class="logo-navbar logo-escura">
+        <img src="images/SynergySoluctionswhitelogo.png" alt="Synergy Solutions" class="logo-navbar">
       </a>
 
       <!-- Botão hambúrguer: só aparece em telas pequenas (controlado no CSS) -->
@@ -61,13 +60,26 @@
   </nav>
 
  <!-- 1. Sessão Início -->
-  <section id="inicio" class="sessao" data-tema="escuro">
-    <h1>Synergy Solutions</h1>
-    <p>Criando soluções inovadoras para o seu negócio.</p>
+  <section id="inicio" class="sessao sessao-inicio">
+    <div class="conteudo-hero">
+      <h1 class="titulo-hero">
+        Criando soluções <span class="destaque-cromatico">inovadoras</span> para o seu negócio.
+      </h1>
+      <p class="descricao-hero">
+        Synergy Solutions cria sites institucionais e landing pages rápidos, seguros e sob medida
+        para pequenos e médios negócios.
+      </p>
+      <div class="hero-botoes">
+        <a href="#projetos" class="btn-primario">
+          Ver Projetos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </a>
+        <button type="button" class="btn-secundario abre-modal-contato">Falar Conosco</button>
+      </div>
+    </div>
   </section>
 
   <!-- 2. Sessão Sobre -->
-  <section id="sobre" class="sessao" data-tema="claro">
+  <section id="sobre" class="sessao">
     <h2>Sobre a Empresa</h2>
 
     <div class="container-quadrados">
@@ -89,7 +101,7 @@
   </section>
 
   <!-- 3. Sessão Projetos com Carrossel -->
-  <section id="projetos" class="sessao" data-tema="escuro">
+  <section id="projetos" class="sessao">
     <h2>Nossos Projetos</h2>
 
     <div class="cards-container">
@@ -104,10 +116,10 @@
 
 
   <!-- 4. Sessão Contato -->
-  <section id="contato" class="sessao" data-tema="claro">
+  <section id="contato" class="sessao">
     <h2>Entre em Contato</h2>
     <p style="margin: 15px 0; font-size: 18px;">Se quer saber mais, clique no botão abaixo.</p>
-    <button id="btn-abrir-form" class="btn-destaque">Saber Mais</button>
+    <button id="btn-abrir-form" class="btn-destaque abre-modal-contato">Saber Mais</button>
   </section>
 
   <!-- Janela Popup do Formulário (Escondida por padrão) -->

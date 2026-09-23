@@ -3,20 +3,17 @@
 const prefereMenosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 
-// LÓGICA DO MENU ATIVO NO SCROLL (e da troca de logo clara/escura)
+// LÓGICA DO MENU ATIVO NO SCROLL
 const secoes = document.querySelectorAll('.sessao');
 const linksMenu = document.querySelectorAll('.nav-link');
-const navbar = document.getElementById('navbar');
 
-function atualizarNavbarConformeScroll() {
+function atualizarLinkAtivo() {
   let sessaoAtual = '';
-  let temaAtual = 'escuro';
 
   secoes.forEach(secao => {
     const topoDaSecao = secao.offsetTop;
     if (pageYOffset >= topoDaSecao - (window.innerHeight / 3)) {
       sessaoAtual = secao.getAttribute('id');
-      temaAtual = secao.dataset.tema || 'escuro';
     }
   });
 
@@ -26,13 +23,25 @@ function atualizarNavbarConformeScroll() {
       link.classList.add('active');
     }
   });
-
-  // Troca a logo: em sessões de fundo claro, usamos a logo de letras escuras.
-  navbar.classList.toggle('fundo-claro', temaAtual === 'claro');
 }
 
-window.addEventListener('scroll', atualizarNavbarConformeScroll);
-atualizarNavbarConformeScroll(); // roda uma vez já no carregamento da página
+window.addEventListener('scroll', atualizarLinkAtivo);
+atualizarLinkAtivo(); // roda uma vez já no carregamento da página
+
+
+// --- NAVBAR: estado "flutuante" (pílula) ao rolar a página ---
+// No topo (scroll = 0), a navbar fica sem fundo, fundida com a sessão atrás
+// dela. Assim que a página rola um pouco, ela vira a pílula flutuante.
+// Passar o mouse em cima da barra também ativa o mesmo visual — isso é
+// resolvido só com CSS (:hover), sem precisar de JS.
+const navbar = document.getElementById('navbar');
+
+function atualizarEstiloNavbar() {
+  navbar.classList.toggle('flutuante', window.scrollY > 10);
+}
+
+window.addEventListener('scroll', atualizarEstiloNavbar);
+atualizarEstiloNavbar(); // roda uma vez já no carregamento da página
 
 
 // --- LÓGICA DO MENU HAMBÚRGUER (CELULAR) ---
@@ -118,7 +127,10 @@ slider.addEventListener('mousemove', (e) => {
 
 
 // --- LÓGICA DO MODAL (POPUP) E WHATSAPP ---
-const btnAbrirModal = document.getElementById('btn-abrir-form');
+// Vários botões no site podem abrir o mesmo modal (o "Falar Conosco" do
+// hero, e o "Saber Mais" da sessão de contato) — por isso buscamos todos
+// que tiverem essa classe em comum, em vez de um único ID fixo.
+const botoesAbrirModal = document.querySelectorAll('.abre-modal-contato');
 const modal = document.getElementById('modal-contato');
 const btnFecharModal = document.querySelector('.fechar-modal');
 const formWhats = document.getElementById('form-whatsapp');
@@ -179,7 +191,7 @@ function gerenciarTecladoModal(e) {
   }
 }
 
-btnAbrirModal.addEventListener('click', abrirModal);
+botoesAbrirModal.forEach(botao => botao.addEventListener('click', abrirModal));
 btnFecharModal.addEventListener('click', fecharModal);
 
 // Fecha o Popup se clicar fora da caixinha branca (no fundo escuro)
