@@ -6,7 +6,7 @@
 
   <!-- Ícone da aba do navegador (favicon). Usamos um emoji em SVG, então não
        depende de nenhum arquivo de imagem externo. -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%9A%80</text></svg>">
+  <link rel="icon" href="images/SynergySoluctionsicon.png">
 
   <title>Synergy Solutions | Soluções em Desenvolvimento e Segurança</title>
 
@@ -25,7 +25,12 @@
   <!-- Barra de Navegação -->
   <nav id="navbar">
     <div class="navbar-linha">
-      <a href="#inicio" class="marca">Synergy Solutions</a>
+      <!-- Duas versões da logo: a JS troca qual delas fica visível (classe
+           "fundo-claro" na navbar), de acordo com a sessão que está atrás dela. -->
+      <a href="#inicio" class="marca-link" aria-label="Synergy Solutions - página inicial">
+        <img src="images/SynergySoluctionswhitelogo.png" alt="Synergy Solutions" class="logo-navbar logo-clara">
+        <img src="images/SynergySoluctionsblacklogo.png" alt="Synergy Solutions" class="logo-navbar logo-escura">
+      </a>
 
       <!-- Botão hambúrguer: só aparece em telas pequenas (controlado no CSS) -->
       <button id="btn-menu" class="btn-menu" aria-expanded="false" aria-controls="lista-menu" aria-label="Abrir menu de navegação">
@@ -40,29 +45,29 @@
       <li><a href="#sobre" class="nav-link">Sobre a Empresa</a></li>
       <li><a href="#projetos" class="nav-link">Nossos Projetos</a></li>
       <li><a href="#contato" class="nav-link">Contato</a></li>
-
-      <!-- Ícones sociais movidos para dentro da lista: assim, no celular, eles
-           aparecem junto com o menu em vez de simplesmente sumir da tela. -->
-      <li class="item-icones-sociais">
-        <div class="icones-sociais">
-          <!-- Ícone único do GitHub: não aponta para um perfil específico, e sim
-               para a página da equipe, onde ficam os dois links individuais. -->
-          <a href="equipe.html" aria-label="Conheça nossa equipe no GitHub">
-            <i class="fa-brands fa-github" aria-hidden="true"></i>
-          </a>
-        </div>
-      </li>
     </ul>
+
+    <!-- Bloco separado da lista de links: assim ele fica ancorado no canto
+         direito da barra, independente de onde os títulos do menu terminam. -->
+    <div class="navbar-icone">
+      <div class="icones-sociais">
+        <!-- Ícone único do GitHub: não aponta para um perfil específico, e sim
+             para a página da equipe, onde ficam os dois links individuais. -->
+        <a href="equipe.html" aria-label="Conheça nossa equipe no GitHub">
+          <i class="fa-brands fa-github" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
   </nav>
 
  <!-- 1. Sessão Início -->
-  <section id="inicio" class="sessao">
+  <section id="inicio" class="sessao" data-tema="escuro">
     <h1>Synergy Solutions</h1>
     <p>Criando soluções inovadoras para o seu negócio.</p>
   </section>
 
   <!-- 2. Sessão Sobre -->
-  <section id="sobre" class="sessao">
+  <section id="sobre" class="sessao" data-tema="claro">
     <h2>Sobre a Empresa</h2>
 
     <div class="container-quadrados">
@@ -84,7 +89,7 @@
   </section>
 
   <!-- 3. Sessão Projetos com Carrossel -->
-  <section id="projetos" class="sessao">
+  <section id="projetos" class="sessao" data-tema="escuro">
     <h2>Nossos Projetos</h2>
 
     <div class="cards-container">
@@ -99,7 +104,7 @@
 
 
   <!-- 4. Sessão Contato -->
-  <section id="contato" class="sessao">
+  <section id="contato" class="sessao" data-tema="claro">
     <h2>Entre em Contato</h2>
     <p style="margin: 15px 0; font-size: 18px;">Se quer saber mais, clique no botão abaixo.</p>
     <button id="btn-abrir-form" class="btn-destaque">Saber Mais</button>
@@ -152,6 +157,14 @@
 
           </div>
         </div>
+        <!-- Campo-armadilha (honeypot): invisível para pessoas, mas visível para
+             robôs que preenchem formulários automaticamente. Se vier preenchido,
+             o JS trata o envio como spam e ignora. -->
+        <div class="campo-form campo-armadilha" aria-hidden="true">
+          <label for="site-user">Não preencha este campo</label>
+          <input type="text" id="site-user" name="site" tabindex="-1" autocomplete="off">
+        </div>
+
         <button type="submit">Ir para o WhatsApp</button>
       </form>
     </div>
@@ -159,6 +172,7 @@
 
   <footer>
     <p>&copy; <span id="ano-atual"></span> Synergy Solutions. Todos os direitos reservados.</p>
+    <p><a href="privacidade.html" class="link-rodape">Política de Privacidade</a></p>
   </footer>
 
   <script src="script.js"></script>

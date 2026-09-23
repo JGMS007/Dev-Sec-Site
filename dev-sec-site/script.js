@@ -3,17 +3,20 @@
 const prefereMenosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 
-// LÓGICA DO MENU ATIVO NO SCROLL
+// LÓGICA DO MENU ATIVO NO SCROLL (e da troca de logo clara/escura)
 const secoes = document.querySelectorAll('.sessao');
 const linksMenu = document.querySelectorAll('.nav-link');
+const navbar = document.getElementById('navbar');
 
-window.addEventListener('scroll', () => {
+function atualizarNavbarConformeScroll() {
   let sessaoAtual = '';
+  let temaAtual = 'escuro';
 
   secoes.forEach(secao => {
     const topoDaSecao = secao.offsetTop;
     if (pageYOffset >= topoDaSecao - (window.innerHeight / 3)) {
       sessaoAtual = secao.getAttribute('id');
+      temaAtual = secao.dataset.tema || 'escuro';
     }
   });
 
@@ -23,7 +26,13 @@ window.addEventListener('scroll', () => {
       link.classList.add('active');
     }
   });
-});
+
+  // Troca a logo: em sessões de fundo claro, usamos a logo de letras escuras.
+  navbar.classList.toggle('fundo-claro', temaAtual === 'claro');
+}
+
+window.addEventListener('scroll', atualizarNavbarConformeScroll);
+atualizarNavbarConformeScroll(); // roda uma vez já no carregamento da página
 
 
 // --- LÓGICA DO MENU HAMBÚRGUER (CELULAR) ---
@@ -181,8 +190,21 @@ window.addEventListener('click', (e) => {
 });
 
 // Lógica de Enviar os Dados e abrir o WhatsApp
+const btnEnviarForm = formWhats.querySelector('button[type="submit"]');
+
 formWhats.addEventListener('submit', (e) => {
   e.preventDefault();
+
+  // 1ª verificação: campo-armadilha (honeypot). Só um robô preencheria esse
+  // campo, já que ele fica escondido da tela para pessoas de verdade.
+  const campoArmadilha = document.getElementById('site-user').value;
+  if (campoArmadilha !== '') {
+    // Não avisamos o "robô" de que foi identificado — só resetamos e
+    // encerramos a função como se nada tivesse acontecido.
+    formWhats.reset();
+    fecharModal();
+    return;
+  }
 
   const nome = document.getElementById('nome-user').value.trim();
   const email = document.getElementById('email-user').value.trim();
@@ -211,6 +233,15 @@ Telefone: (${ddd}) ${telefone}`;
 
   const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensagem)}`;
   window.open(url, '_blank');
+
+  // Trava o botão por 3 segundos para evitar clique duplo/nervoso abrindo
+  // várias abas do WhatsApp seguidas.
+  btnEnviarForm.disabled = true;
+  btnEnviarForm.textContent = 'Enviando...';
+  setTimeout(() => {
+    btnEnviarForm.disabled = false;
+    btnEnviarForm.textContent = 'Ir para o WhatsApp';
+  }, 3000);
 
   formWhats.reset();
   fecharModal();

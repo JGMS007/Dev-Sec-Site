@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="images/SynergySoluctionsicon.png">
+  <title>Política de Privacidade | Synergy Solutions</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav id="navbar">
+    <div class="navbar-linha">
+      <a href="index.html#inicio" class="marca-link" aria-label="Synergy Solutions - página inicial">
+        <img src="images/SynergySoluctionsblacklogo.png" alt="Synergy Solutions" class="logo-navbar">
+      </a>
+    </div>
+  </nav>
+
+  <main class="pagina-legal">
+    <div class="conteudo-legal">
+      <h1>Política de Privacidade</h1>
+      <p class="data-atualizacao">Última atualização: <span id="data-atual"></span></p>
+
+      <div class="aviso-legal">
+        <strong>Nota da equipe técnica:</strong> este texto é um <strong>modelo genérico</strong> de
+        política de privacidade, criado para servir de ponto de partida. Ele ainda não foi revisado
+        por um advogado e não deve ser considerado como aconselhamento jurídico. Recomendamos que a
+        Synergy Solutions consulte um profissional especializado em LGPD antes de publicar esta
+        página oficialmente.
+      </div>
+
+      <h2>1. Quem somos</h2>
+      <p>
+        A Synergy Solutions é responsável pelo tratamento dos dados pessoais coletados através
+        deste site, nos termos da Lei Geral de Proteção de Dados (Lei nº 13.709/2018 — LGPD).
+      </p>
+
+      <h2>2. Quais dados coletamos</h2>
+      <p>Coletamos apenas os dados que você nos fornece voluntariamente ao preencher o formulário de contato:</p>
+      <ul>
+        <li>Nome</li>
+        <li>E-mail</li>
+        <li>Telefone (DDD + número)</li>
+      </ul>
+      <p>Não coletamos automaticamente outros dados pessoais neste momento.</p>
+
+      <h2>3. Para que usamos esses dados</h2>
+      <p>
+        Os dados informados no formulário são usados exclusivamente para iniciar um contato via
+        WhatsApp com a nossa equipe, a seu pedido, para tratar sobre nossos serviços. Não usamos
+        esses dados para nenhuma outra finalidade.
+      </p>
+
+      <h2>4. Com quem compartilhamos seus dados</h2>
+      <p>
+        Não vendemos, alugamos ou compartilhamos seus dados pessoais com terceiros. O envio da
+        mensagem acontece diretamente entre o seu navegador e o WhatsApp, a partir de um link que
+        você mesmo confirma antes de enviar.
+      </p>
+
+      <h2>5. Cookies</h2>
+      <p>
+        No momento, este site não utiliza cookies de rastreamento ou ferramentas de analytics.
+        Caso isso mude no futuro (por exemplo, com a adição do Google Analytics), esta política
+        será atualizada para refletir essa mudança.
+      </p>
+
+      <h2>6. Seus direitos como titular dos dados</h2>
+      <p>De acordo com a LGPD, você tem o direito de solicitar, a qualquer momento:</p>
+      <ul>
+        <li>Confirmação de que tratamos seus dados;</li>
+        <li>Acesso aos dados que temos sobre você;</li>
+        <li>Correção de dados incompletos ou desatualizados;</li>
+        <li>Exclusão dos seus dados de nossos registros.</li>
+      </ul>
+
+      <h2>7. Como falar conosco</h2>
+      <p>
+        Para exercer qualquer um dos direitos acima, ou tirar dúvidas sobre esta política, entre em
+        contato pelo formulário na
+        <a href="index.html#contato">página inicial</a>.
+      </p>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="ano-atual"></span> Synergy Solutions. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    const agora = new Date();
+    document.getElementById('ano-atual').textContent = agora.getFullYear();
+    document.getElementById('data-atual').textContent = agora.toLocaleDateString('pt-BR');
+  </script>
+</body>
+</html>

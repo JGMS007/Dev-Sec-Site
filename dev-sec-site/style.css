@@ -63,23 +63,59 @@ input:focus-visible {
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 20px;
+  padding: 10px 20px;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(5px);
   z-index: 1000;
+
+  /* Grid de 3 colunas nomeadas: logo à esquerda, títulos no centro (de
+     verdade, porque a coluna do meio ocupa o espaço restante) e o ícone
+     do GitHub ancorado à direita. */
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "logo links icone";
+  align-items: center;
+  column-gap: 20px;
 }
 
 .navbar-linha {
+  grid-area: logo;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 15px;
+  justify-self: start;
 }
 
-.marca {
-  color: var(--cor-texto-claro);
-  font-weight: bold;
-  font-size: 20px;
-  text-decoration: none;
+.marca-link {
+  display: flex;
+  align-items: center;
+}
+
+.logo-navbar {
+  height: 64px;
+  width: auto;
+  display: block;
+}
+
+/* Por padrão mostramos a logo de letras claras (a sessão inicial é escura).
+   A classe "fundo-claro" é adicionada/removida via JS conforme a sessão
+   visível atrás da navbar muda. */
+.logo-escura {
+  display: none;
+}
+
+#navbar.fundo-claro .logo-clara {
+  display: none;
+}
+
+#navbar.fundo-claro .logo-escura {
+  display: block;
+}
+
+@media (max-width: 480px) {
+  .logo-navbar {
+    height: 34px;
+  }
 }
 
 /* Botão hambúrguer: escondido por padrão (telas grandes) */
@@ -102,12 +138,18 @@ input:focus-visible {
 }
 
 #lista-menu {
+  grid-area: links;
   list-style: none;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 40px;
-  margin-top: 15px;
+  justify-self: center;
+}
+
+.navbar-icone {
+  grid-area: icone;
+  justify-self: end;
 }
 
 #navbar a {
@@ -122,10 +164,6 @@ input:focus-visible {
 #navbar a:hover, #navbar a.active {
   color: var(--cor-destaque);
   transform: scale(1.15) translateY(-3px);
-}
-
-.item-icones-sociais {
-  display: flex;
 }
 
 .icones-sociais {
@@ -150,9 +188,19 @@ input:focus-visible {
     display: flex;
   }
 
-  /* Em vez de esconder os ícones sociais (como era antes), o menu inteiro
-     vira uma lista vertical recolhível, e os ícones vão junto dela. */
+  /* No celular, a coluna do meio (títulos) deixa de existir: logo e ícone
+     dividem a primeira linha, e a lista de links vira uma segunda linha
+     recolhível, ocupando toda a largura. */
+  #navbar {
+    grid-template-columns: auto auto;
+    grid-template-areas:
+      "logo icone"
+      "links links";
+    row-gap: 0;
+  }
+
   #lista-menu {
+    justify-self: stretch;
     flex-direction: column;
     align-items: center;
     gap: 20px;
@@ -165,10 +213,6 @@ input:focus-visible {
   #lista-menu.aberto {
     max-height: 400px;
     margin-top: 20px;
-  }
-
-  .item-icones-sociais {
-    margin-top: 10px;
   }
 }
 
@@ -427,4 +471,104 @@ footer {
   text-align: center;
   padding: 20px;
   font-size: 14px;
+}
+
+footer p {
+  margin-top: 6px;
+}
+
+.link-rodape {
+  color: var(--cor-texto-claro);
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.link-rodape:hover {
+  opacity: 1;
+  color: var(--cor-destaque);
+}
+
+/* Campo-armadilha (honeypot) do formulário: escondido visualmente com
+   posicionamento fora da tela, em vez de display:none. Muitos robôs de spam
+   ignoram campos com display:none, mas ainda preenchem campos "escondidos"
+   dessa forma — por isso essa técnica funciona melhor para pegá-los. */
+.campo-armadilha {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+}
+
+/* --- PÁGINAS DE TEXTO CORRIDO (ex: Política de Privacidade) --- */
+.pagina-legal {
+  min-height: 100vh;
+  padding: 140px 20px 60px;
+  background-color: var(--cor-fundo-claro);
+  color: var(--cor-texto-escuro);
+}
+
+.conteudo-legal {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: left;
+  line-height: 1.6;
+}
+
+.conteudo-legal h1 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+.conteudo-legal .data-atualizacao {
+  color: var(--cor-texto-secundario);
+  font-size: 0.9rem;
+  margin-bottom: 30px;
+}
+
+.conteudo-legal h2 {
+  font-size: 1.4rem;
+  margin: 30px 0 10px;
+  text-align: left;
+}
+
+.conteudo-legal p, .conteudo-legal li {
+  margin-bottom: 12px;
+}
+
+.conteudo-legal ul {
+  padding-left: 20px;
+}
+
+.aviso-legal {
+  background-color: #fff3cd;
+  border: 1px solid #ffe69c;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 30px;
+  font-size: 0.9rem;
+}
+
+/* --- PÁGINA 404 --- */
+.sessao-404 {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  background-color: var(--cor-fundo-escuro);
+  color: var(--cor-texto-claro);
+}
+
+.codigo-404 {
+  font-size: 6rem;
+  font-weight: bold;
+  color: var(--cor-destaque);
+  line-height: 1;
+}
+
+.sessao-404 p {
+  margin: 20px 0 30px;
+  font-size: 1.1rem;
+  max-width: 500px;
 }
